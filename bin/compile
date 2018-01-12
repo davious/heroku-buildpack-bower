@@ -1,8 +1,14 @@
 #!/usr/bin/env bash
 
-BUILD_DIR=$1
-CACHE_DIR=$2
-
-cd $BUILD_DIR
-
-PATH="$BUILD_DIR/vendor/node/bin:$BUILD_DIR/bin:$BUILD_DIR/node_modules/.bin:$PATH" bower install --config.storage.packages=vendor/bower/packages --config.storage.registry=vendor/bower/registry --config.tmp=vendor/bower/tmp
+# https://github.com/davidmfoley/heroku-buildpack-nodejs-gulp-bower/blob/master/bin/compile
+# Check and run bower
+(
+  if [ -f $build_dir/bower.json ]; then
+    # Install bower locally
+    npm install bower
+    echo "-----> Found bower.json, running bower install"
+    $build_dir/node_modules/.bin/bower install
+  else
+    echo "-----> No bower.json found"
+  fi
+)
